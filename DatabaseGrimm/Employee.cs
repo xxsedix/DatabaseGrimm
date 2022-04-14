@@ -8,6 +8,7 @@ namespace DatabaseGrimm
 {
     class Employee
     {
+        //declare variables and set get/set
         public int ID { get; set; }
 
         public string Name { get; set; }
@@ -15,6 +16,7 @@ namespace DatabaseGrimm
         public float Pay { get; set; }
         public string Clearence { get; set; }
 
+        //default constructor
         public Employee()
         {
             ID = 0;
@@ -24,6 +26,7 @@ namespace DatabaseGrimm
             Clearence = "Employee Clearence LVL";
         }
 
+        //constructor
         public Employee(int id, string name, string shift, float pay, string clearence)
         {
             ID = id;
@@ -33,6 +36,7 @@ namespace DatabaseGrimm
             Clearence = clearence;
         }
 
+        //to string
         public override string ToString()
         {
             return String.Format("ID={0}, Name={1}, Shift={2}, Pay={3}, Clearence={4}", ID, Name, Shift, Pay, Clearence);

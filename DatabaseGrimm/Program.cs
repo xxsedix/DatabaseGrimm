@@ -10,7 +10,7 @@ namespace DatabaseGrimm
 {
     class Program
     {
-
+        //create list to add employees into for easy adding to database
         public static List<Employee> GetEmployeesFromDatabase(DbCommand cmd)
         {
             List<Employee> results = new List<Employee>();
@@ -27,6 +27,7 @@ namespace DatabaseGrimm
             return results;
         }
 
+        //Find new id
         public static int GetNextID(List<Employee> employees)
         {
             int NewID = 0;
@@ -42,10 +43,12 @@ namespace DatabaseGrimm
 
         static void Main(string[] args)
         {
+            //initialize connection with server
             string provider = ConfigurationManager.AppSettings["provider"];
             string connectionString = ConfigurationManager.AppSettings["connectionString"];
             List<Employee> employees;
 
+            //declare DBFactory.
             DbProviderFactory factory = DbProviderFactories.GetFactory(provider);
             using (DbConnection conn = factory.CreateConnection())
             {
@@ -60,12 +63,14 @@ namespace DatabaseGrimm
 
                 DbCommand cmd = conn.CreateCommand();
 
+                //While loop to loop the menu
                 bool quit = false;
                 while (quit == false){
 
                     int choice=0;
                     try
                     {
+                        //Ask for user input.
                         Console.WriteLine("What would you like to do: ");
                         Console.WriteLine("View database \t\t= 1");
                         Console.WriteLine("Add to database \t= 2");
@@ -99,19 +104,23 @@ namespace DatabaseGrimm
                         string clearence = Console.ReadLine();
                         Console.WriteLine("");
 
+                        //load employees
                         employees = GetEmployeesFromDatabase(cmd);
                         int newID = GetNextID(employees);
 
+                        //delete employee
                         string query = String.Format("insert into employees values ({0}, '{1}', '{2}', {3:F2}, '{4}')", newID, name, shift, HRate, clearence);
                         cmd.CommandText = query;
                         cmd.ExecuteNonQuery();
 
+                        //print to show add
                         employees = GetEmployeesFromDatabase(cmd);
                         Writer.WriteEmployeesToScreen(employees);
                         Console.WriteLine("");
                     }
                     else if(choice == 3)
                     {
+                        //print current employees and ask for who to delete
                         Console.WriteLine("\nThe current employees are: ");
                         employees = GetEmployeesFromDatabase(cmd);
                         Writer.WriteEmployeesToScreen(employees);
@@ -119,9 +128,11 @@ namespace DatabaseGrimm
                         Console.Write("Enter an employee number to delete that employee: ");
                         int delcho = Convert.ToInt32(Console.ReadLine());
 
+                        //delete employee
                         cmd.CommandText = String.Format("delete from employees where EmployeeNum='{0}'", delcho);
                         cmd.ExecuteNonQuery();
 
+                        //print to show delete
                         Console.WriteLine("The employee has been removed: \n");
                         employees = GetEmployeesFromDatabase(cmd);
                         Writer.WriteEmployeesToScreen(employees);
@@ -131,8 +142,10 @@ namespace DatabaseGrimm
                     }
                     else if (choice == 4)
                     {
+                        //quit
                         Console.WriteLine("Thank you for using this program. :) Goodbye.");
                         quit = true;
+                        //wait for screenshot
                         Console.ReadLine();
                     }
 
